@@ -8,17 +8,18 @@ import (
 	"time"
 )
 
-func RunBot(interval string, simulator bool, comision float64, tradingAmount int64, symbol string, intervalToTrade time.Duration) {
+func RunBot(interval string, simulator bool, comision float64, tradingAmount int64, symbol string, intervalToTrade time.Duration, amountCandles int64) {
+	fmt.Printf("Interval %s , simulator %v , comision %v , tradingAmount %v , symbol %s , intervalToTrade %v", interval, simulator, comision, tradingAmount, symbol, intervalToTrade)
 	dai := float64(1000)
 	btc := float64(0)
 
 	for {
 		resp, err := http.Get(URL_BINANCE + "?symbol=" + symbol + "&interval=" + interval)
 		if err != nil {
-			fmt.Errorf("there was an error getting candles", err)
+			fmt.Printf("there was an error getting candles %v\n", err)
 		}
 		if resp.StatusCode != 200 {
-			fmt.Errorf("there was an invalid status code %d", resp.StatusCode)
+			fmt.Printf("there was an invalid status code %d", resp.StatusCode)
 			break
 
 		}
@@ -27,25 +28,26 @@ func RunBot(interval string, simulator bool, comision float64, tradingAmount int
 
 		var result Response
 		if err := json.Unmarshal(body, &result); err != nil { // Parse []byte to the go struct pointer
-			fmt.Println("Can not unmarshal JSON")
+			fmt.Printf("Cannot unmarshal JSON %v\n", err)
+			break
 		}
 		candles := []Candle{}
 		for _, cl := range result {
 			if len(cl) < 7 {
-				fmt.Errorf("there was an invalid response %v", cl)
+				fmt.Printf("there was an invalid response %v", cl)
 				break
 			}
 			candle := getCandle(cl)
 			candles = append(candles, candle)
 		}
-		candles = candles[len(candles)-3:]
+		candles = candles[len(candles)-int(amountCandles):]
 		red := 0
 		for _, c := range candles {
 			if c.Open > c.Close {
 				red++
 			}
 		}
-		if red == 3 {
+		if red == int(amountCandles) {
 			if simulator {
 				if float64(tradingAmount) < dai {
 
