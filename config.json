@@ -1,0 +1,9 @@
+{
+    "interval":"1m",
+    "simulator":true,
+	"comision":0.00075,
+    "tradingAmount":15,
+    "symbol":"BTCDAI",
+	"intervalToTrade":31,
+    "amountCandles":3
+}

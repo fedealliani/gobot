@@ -1,5 +1,7 @@
 package bot
 
+import "time"
+
 type Response [][]interface{}
 type Candle struct {
 	OpenTime                  float64
@@ -14,4 +16,13 @@ type Candle struct {
 	TakerBusyBaseAssetVolume  float64
 	TakerBusyQuoteAssetVolume float64
 	Ignore                    float64
+}
+type Config struct {
+	Interval        string
+	Simulator       bool
+	Comision        float64
+	TradingAmount   int64
+	Symbol          string
+	IntervalToTrade time.Duration
+	AmountCandles   int64
 }

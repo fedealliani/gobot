@@ -8,13 +8,13 @@ import (
 	"time"
 )
 
-func RunBot(interval string, simulator bool, comision float64, tradingAmount int64, symbol string, intervalToTrade time.Duration, amountCandles int64) {
-	fmt.Printf("Interval %s , simulator %v , comision %v , tradingAmount %v , symbol %s , intervalToTrade %v", interval, simulator, comision, tradingAmount, symbol, intervalToTrade)
+func RunBot(config Config) {
+	fmt.Printf("Interval %s , simulator %v , comision %v , tradingAmount %v , symbol %s , intervalToTrade %v\n", config.Interval, config.Simulator, config.Comision, config.TradingAmount, config.Symbol, config.IntervalToTrade)
 	dai := float64(1000)
 	btc := float64(0)
 
 	for {
-		resp, err := http.Get(URL_BINANCE + "?symbol=" + symbol + "&interval=" + interval)
+		resp, err := http.Get(URL_BINANCE + "?symbol=" + config.Symbol + "&interval=" + config.Interval)
 		if err != nil {
 			fmt.Printf("there was an error getting candles %v\n", err)
 		}
@@ -40,24 +40,24 @@ func RunBot(interval string, simulator bool, comision float64, tradingAmount int
 			candle := getCandle(cl)
 			candles = append(candles, candle)
 		}
-		candles = candles[len(candles)-int(amountCandles):]
+		candles = candles[len(candles)-int(config.AmountCandles):]
 		red := 0
 		for _, c := range candles {
 			if c.Open > c.Close {
 				red++
 			}
 		}
-		if red == int(amountCandles) {
-			if simulator {
-				if float64(tradingAmount) < dai {
+		if red == int(config.AmountCandles) {
+			if config.Simulator {
+				if float64(config.TradingAmount) < dai {
 
-					dai -= float64(tradingAmount)
-					transactionComision := float64(tradingAmount) * comision
+					dai -= float64(config.TradingAmount)
+					transactionComision := float64(config.TradingAmount) * config.Comision
 					dai -= transactionComision
 					btcPrice := candles[len(candles)-1].Close
-					btcToBuy := float64(tradingAmount) / btcPrice
+					btcToBuy := float64(config.TradingAmount) / btcPrice
 					btc += btcToBuy
-					fmt.Printf("BUY %v BTC WITH %v DAI AND %v COMISION IN INTERVAL %s\n", btcToBuy, tradingAmount, transactionComision, interval)
+					fmt.Printf("BUY %v BTC WITH %v DAI AND %v COMISION IN INTERVAL %s\n", btcToBuy, config.TradingAmount, transactionComision, config.Interval)
 					fmt.Printf("DAI:%v BTC:%v TOTALUSD:%v\n", dai, btc, (dai + btc*btcPrice))
 
 				} else {
@@ -68,15 +68,15 @@ func RunBot(interval string, simulator bool, comision float64, tradingAmount int
 			}
 		}
 		if red == 0 {
-			if simulator {
+			if config.Simulator {
 				btcPrice := candles[len(candles)-1].Close
-				btcToSell := float64(tradingAmount) / btcPrice
+				btcToSell := float64(config.TradingAmount) / btcPrice
 				if btcToSell <= btc {
 					btc -= btcToSell
-					transactionComision := float64(tradingAmount) * comision
+					transactionComision := float64(config.TradingAmount) * config.Comision
 					dai -= transactionComision
-					dai += float64(tradingAmount)
-					fmt.Printf("SELL %v BTC WITH %v DAI AND %v COMISION IN INTERVAL %s\n", btcToSell, tradingAmount, transactionComision, interval)
+					dai += float64(config.TradingAmount)
+					fmt.Printf("SELL %v BTC WITH %v DAI AND %v COMISION IN INTERVAL %s\n", btcToSell, config.TradingAmount, transactionComision, config.Interval)
 					fmt.Printf("DAI:%v BTC:%v TOTALUSD:%v\n", dai, btc, (dai + btc*btcPrice))
 				} else {
 					fmt.Println("CANNOT SELL, BECAUSE NOT HAVE BTC TO SELL")
@@ -86,6 +86,6 @@ func RunBot(interval string, simulator bool, comision float64, tradingAmount int
 			}
 		}
 
-		time.Sleep(intervalToTrade)
+		time.Sleep(config.IntervalToTrade)
 	}
 }

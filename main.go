@@ -1,6 +1,9 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"os"
 	"strconv"
 	"time"
@@ -9,40 +12,61 @@ import (
 )
 
 func main() {
+	config := GetConfig()
+	bot.RunBot(config)
+}
+
+func GetConfig() bot.Config {
 	var err error
+	// Default config
+	config := bot.Config{
+		Interval:        "1m",
+		Simulator:       true,
+		Comision:        float64(0.00075),
+		TradingAmount:   int64(15),
+		Symbol:          "BTCDAI",
+		IntervalToTrade: 31 * time.Second,
+		AmountCandles:   int64(3),
+	}
 	argsWithoutProg := os.Args[1:]
-	interval := "1m"
-	simulator := true
-	comision := float64(0.00075)
-	tradingAmount := int64(15)
-	symbol := "BTCDAI"
-	intervalToTrade := 31 * time.Second
-	amountCandles := int64(3)
 	if len(argsWithoutProg) == 7 {
-		interval = argsWithoutProg[0]
-		simulator, err = strconv.ParseBool(argsWithoutProg[1])
+		config.Interval = argsWithoutProg[0]
+		config.Simulator, err = strconv.ParseBool(argsWithoutProg[1])
 		if err != nil {
 			panic(err)
 		}
-		comision, err = strconv.ParseFloat(argsWithoutProg[2], 64)
+
+		config.Comision, err = strconv.ParseFloat(argsWithoutProg[2], 64)
 		if err != nil {
 			panic(err)
 		}
-		tradingAmount, err = strconv.ParseInt(argsWithoutProg[3], 10, 64)
+		config.TradingAmount, err = strconv.ParseInt(argsWithoutProg[3], 10, 64)
 		if err != nil {
 			panic(err)
 		}
-		symbol = argsWithoutProg[4]
+		config.Symbol = argsWithoutProg[4]
 		seconds, err := strconv.ParseInt(argsWithoutProg[5], 10, 64)
 		if err != nil {
 			panic(err)
 		}
-		intervalToTrade = time.Duration(seconds) * time.Second
-		amountCandles, err = strconv.ParseInt(argsWithoutProg[6], 10, 64)
+		config.IntervalToTrade = time.Duration(seconds) * time.Second
+		config.AmountCandles, err = strconv.ParseInt(argsWithoutProg[6], 10, 64)
 		if err != nil {
 			panic(err)
 		}
+	} else {
+		jsonFile, err := os.Open("config.json")
+		if err != nil {
+			fmt.Printf("Cannot open config.json. Use default config...")
+			return config
+		}
+		defer jsonFile.Close()
+		byteValue, _ := ioutil.ReadAll(jsonFile)
+		err = json.Unmarshal(byteValue, &config)
+		if err != nil {
+			panic(err)
+		}
+		config.IntervalToTrade = config.IntervalToTrade * time.Second
 	}
-
-	bot.RunBot(interval, simulator, comision, tradingAmount, symbol, intervalToTrade, amountCandles)
+	return config
 }
