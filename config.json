@@ -1,9 +1,11 @@
 {
-    "interval":"1m",
+    "strategyName":"percentageStrategy",
+    "intervalName":"1m",
+    "intervalInSeconds":59,
     "simulator":true,
-	"comision":0.00075,
-    "tradingAmount":15,
-    "symbol":"BTCDAI",
-	"intervalToTrade":31,
-    "amountCandles":3
+    "symbol":"BTCUSDT",
+    "amountOtherCoinToTrade":5000,
+	"variables":{
+       "percentage":0.2
+    }
 }
