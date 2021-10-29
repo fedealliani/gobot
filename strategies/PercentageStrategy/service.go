@@ -34,7 +34,7 @@ func (c *PercentageStrategy) ShouldSell(info bot.Info) (bool, float64, error) {
 		percentage := 100.0 - (c.LastPriceTrade/lastPrice)*100.0
 		if percentage > c.Percentage {
 			c.BuyMode = true
-			amountSell := info.AmountDominantCoin * lastPrice
+			amountSell := info.AmountDominantCoin
 			return true, amountSell, nil
 		}
 
