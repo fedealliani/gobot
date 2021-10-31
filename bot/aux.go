@@ -10,74 +10,44 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/adshao/go-binance/v2"
 	"github.com/joho/godotenv"
 	"github.com/nikoksr/notify"
 	"github.com/nikoksr/notify/service/telegram"
 )
 
-func getCandle(cl []interface{}) Candle {
-	open, err := strconv.ParseFloat(cl[1].(string), 64)
+func getCandle(cl *binance.Kline) Candle {
+	open, err := strconv.ParseFloat(cl.Open, 64)
 	if err != nil {
 		fmt.Errorf("there was an error parsing candles", err)
 	}
-	high, err := strconv.ParseFloat(cl[2].(string), 64)
+	high, err := strconv.ParseFloat(cl.High, 64)
 	if err != nil {
 		fmt.Errorf("there was an error parsing candles", err)
 	}
-	low, err := strconv.ParseFloat(cl[3].(string), 64)
+	low, err := strconv.ParseFloat(cl.Low, 64)
 	if err != nil {
 		fmt.Errorf("there was an error parsing candles", err)
 	}
-	close, err := strconv.ParseFloat(cl[4].(string), 64)
+	close, err := strconv.ParseFloat(cl.Close, 64)
 	if err != nil {
 		fmt.Errorf("there was an error parsing candles", err)
 	}
-	volume, err := strconv.ParseFloat(cl[5].(string), 64)
+	volume, err := strconv.ParseFloat(cl.Volume, 64)
 	if err != nil {
 		fmt.Errorf("there was an error parsing candles", err)
 	}
 
 	candle := Candle{
-		OpenTime:  cl[0].(float64),
+		OpenTime:  float64(cl.OpenTime),
 		Open:      open,
 		High:      high,
 		Low:       low,
 		Close:     close,
 		Volume:    volume,
-		CloseTime: cl[6].(float64),
+		CloseTime: float64(cl.CloseTime),
 	}
 	return candle
-}
-func GetCandlesFromBinance(symbol string, interval string) ([]Candle, error) {
-	candles := []Candle{}
-
-	resp, err := http.Get(URL_BINANCE + "?symbol=" + symbol + "&interval=" + interval)
-	if err != nil {
-		fmt.Printf("there was an error getting candles %v\n", err)
-		return candles, err
-	}
-	if resp.StatusCode != 200 {
-		fmt.Printf("there was an invalid status code %d", resp.StatusCode)
-		return candles, err
-
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body) // response body is []byte
-	var result Response
-	if err := json.Unmarshal(body, &result); err != nil { // Parse []byte to the go struct pointer
-		fmt.Printf("Cannot unmarshal JSON %v\n", err)
-		return candles, err
-	}
-
-	for _, cl := range result {
-		if len(cl) < 7 {
-			fmt.Printf("there was an invalid response %v", cl)
-			break
-		}
-		candle := getCandle(cl)
-		candles = append(candles, candle)
-	}
-	return candles, nil
 }
 
 func GetValueInUSD(symbol string, value float64) (float64, error) {

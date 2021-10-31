@@ -4,11 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 
+	"github.com/adshao/go-binance/v2"
 	"github.com/fedealliani/gobot/bot"
 	candlestrategy "github.com/fedealliani/gobot/strategies/CandleStrategy"
 	percentagestrategy "github.com/fedealliani/gobot/strategies/PercentageStrategy"
+	"github.com/joho/godotenv"
 )
 
 const CANDLE_STRATEGY = "candleStrategy"
@@ -16,19 +19,23 @@ const PERCENTAGE_STRATEGY = "percentageStrategy"
 
 func main() {
 	config := GetConfig()
+	binanceClient := GetBinanceClient()
+
 	switch config.StrategyName {
 	case CANDLE_STRATEGY:
 		candleStrategy, err := candlestrategy.New(config.Variables)
 		if err != nil {
 			panic(err)
 		}
-		bot.RunBot(config, candleStrategy)
+		bot := bot.New(candleStrategy, config, binanceClient)
+		bot.RunBot()
 	case PERCENTAGE_STRATEGY:
 		percentageStrategy, err := percentagestrategy.New(config.Variables)
 		if err != nil {
 			panic(err)
 		}
-		bot.RunBot(config, percentageStrategy)
+		bot := bot.New(percentageStrategy, config, binanceClient)
+		bot.RunBot()
 	}
 
 }
@@ -57,4 +64,15 @@ func GetConfig() bot.Config {
 	}
 
 	return config
+}
+
+func GetBinanceClient() *binance.Client {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	// Create a telegram service. Ignoring error for demo simplicity.
+	apiKey := os.Getenv("BINANCE_API_KEY")
+	secretKey := os.Getenv("BINANCE_SECRET_KEY")
+	return binance.NewClient(apiKey, secretKey)
 }
