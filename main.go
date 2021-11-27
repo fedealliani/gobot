@@ -10,12 +10,14 @@ import (
 	"github.com/adshao/go-binance/v2"
 	"github.com/fedealliani/gobot/bot"
 	candlestrategy "github.com/fedealliani/gobot/strategies/CandleStrategy"
+	martingalestrategy "github.com/fedealliani/gobot/strategies/MartingaleStrategy"
 	percentagestrategy "github.com/fedealliani/gobot/strategies/PercentageStrategy"
 	"github.com/joho/godotenv"
 )
 
 const CANDLE_STRATEGY = "candleStrategy"
 const PERCENTAGE_STRATEGY = "percentageStrategy"
+const MARTINGALE_STRATEGY = "martingaleStrategy"
 
 func main() {
 	config := GetConfig()
@@ -35,6 +37,13 @@ func main() {
 			panic(err)
 		}
 		bot := bot.New(percentageStrategy, config, binanceClient)
+		bot.RunBot()
+	case MARTINGALE_STRATEGY:
+		martingaleStrategy, err := martingalestrategy.New(config.Variables)
+		if err != nil {
+			panic(err)
+		}
+		bot := bot.New(martingaleStrategy, config, binanceClient)
 		bot.RunBot()
 	}
 

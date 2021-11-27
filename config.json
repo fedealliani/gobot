@@ -1,13 +1,12 @@
 {
-    "strategyName":"candleStrategy",
+    "strategyName":"martingaleStrategy",
     "intervalName":"1m",
     "loggerLvl":5,
     "intervalInSeconds":60,
     "simulator":true,
     "symbol":"BTCUSDT",
-    "amountOtherCoinToTrade":5000,
+    "amountOtherCoinToTrade":10000,
 	"variables":{
-       "amountCandles":2,
-       "tradingAmount":5
+       "amountFirstTrade":1
     }
 }
