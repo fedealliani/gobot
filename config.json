@@ -1,11 +1,12 @@
 {
     "strategyName":"percentageStrategy",
     "intervalName":"1m",
-    "intervalInSeconds":59,
+    "loggerLvl":5,
+    "intervalInSeconds":1,
     "simulator":true,
     "symbol":"BTCUSDT",
     "amountOtherCoinToTrade":5000,
 	"variables":{
-       "percentage":0.2
+       "percentage":0.5
     }
 }

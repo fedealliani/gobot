@@ -5,18 +5,24 @@ import (
 )
 
 func (c *PercentageStrategy) ShouldBuy(info bot.Info) (bool, float64, error) {
-	lastPrice := info.Candles[len(info.Candles)-1].Close
+	// Check if already define a target
 	if !c.Init {
-		c.LastPriceTrade = lastPrice
+		// Define a init target to buy.
+		// The init target is the result of the current price - the configured percentage
+		c.Target = (info.LastPrice * (1 - c.Percentage/100))
 		c.Init = true
 		c.BuyMode = true
 	}
+
+	// Check if bot is in buy mode
 	if c.BuyMode {
-		percentage := 100.0 - (c.LastPriceTrade/lastPrice)*100.0
-		if percentage < -c.Percentage {
-			c.LastPriceTrade = lastPrice
+		// Check if the price is lower than target to buy
+		if info.LastPrice < c.Target {
+			// Calculate new target.
+			// The sell target is the result of the current price + the configured percentage + two comissions (buy and sell comission)
+			c.Target = info.LastPrice*(1+c.Percentage/100) + 2*info.AmountOtherCoin*info.Comission
 			c.BuyMode = false
-			amountToBuy := info.AmountOtherCoin / lastPrice
+			amountToBuy := info.AmountOtherCoin
 			return true, amountToBuy, nil
 		}
 	}
@@ -26,14 +32,11 @@ func (c *PercentageStrategy) ShouldBuy(info bot.Info) (bool, float64, error) {
 }
 
 func (c *PercentageStrategy) ShouldSell(info bot.Info) (bool, float64, error) {
-	lastPrice := info.Candles[len(info.Candles)-1].Close
-	if !c.Init {
-		return false, 0, nil
-	}
+
 	if !c.BuyMode {
-		percentage := 100.0 - (c.LastPriceTrade/lastPrice)*100.0
-		if percentage > c.Percentage {
+		if info.LastPrice > c.Target {
 			c.BuyMode = true
+			c.Target = info.LastPrice * (1 - c.Percentage/100)
 			amountSell := info.AmountDominantCoin
 			return true, amountSell, nil
 		}

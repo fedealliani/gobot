@@ -46,6 +46,7 @@ func GetConfig() bot.Config {
 	config := bot.Config{
 		StrategyName:           "candleStrategy",
 		IntervalName:           "1h",
+		LoggerLvl:              2,
 		IntervalInSeconds:      3600,
 		Simulator:              true,
 		Symbol:                 "BTCUSDT",

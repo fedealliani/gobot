@@ -1,12 +1,14 @@
 package percentagestrategy
 
-import "github.com/mitchellh/mapstructure"
+import (
+	"github.com/mitchellh/mapstructure"
+)
 
 type PercentageStrategy struct {
-	Percentage     float64
-	LastPriceTrade float64
-	BuyMode        bool
-	Init           bool
+	Percentage float64
+	Target     float64
+	BuyMode    bool
+	Init       bool
 }
 
 func New(variables map[string]interface{}) (*PercentageStrategy, error) {

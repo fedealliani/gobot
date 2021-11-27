@@ -5,6 +5,8 @@ type Info struct {
 	AmountDominantCoin float64
 	AmountOtherCoin    float64
 	Candles            []Candle
+	Comission          float64
+	LastPrice          float64
 }
 type Candle struct {
 	OpenTime                  float64
@@ -23,6 +25,7 @@ type Candle struct {
 type Config struct {
 	StrategyName           string
 	IntervalName           string
+	LoggerLvl              int64
 	IntervalInSeconds      int64
 	Simulator              bool
 	Symbol                 string
