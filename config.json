@@ -1,12 +1,13 @@
 {
-    "strategyName":"percentageStrategy",
+    "strategyName":"candleStrategy",
     "intervalName":"1m",
     "loggerLvl":5,
-    "intervalInSeconds":1,
+    "intervalInSeconds":60,
     "simulator":true,
     "symbol":"BTCUSDT",
     "amountOtherCoinToTrade":5000,
 	"variables":{
-       "percentage":0.5
+       "amountCandles":2,
+       "tradingAmount":5
     }
 }
