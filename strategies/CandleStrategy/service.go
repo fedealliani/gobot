@@ -26,7 +26,7 @@ func (c *CandleStrategy) ShouldSell(info bot.Info) (bool, float64, error) {
 	candlesInfo := GetInfoFromCandles(info.Candles, c.AmountCandles)
 	fmt.Println(candlesInfo)
 	if candlesInfo.AmountGreenCandles == c.AmountCandles {
-		tradeAmount := c.TradingAmount / info.LastPrice
+		tradeAmount := c.TradingAmount / info.AvgPrice
 		tradeAmountWithComission := tradeAmount * (1 + info.Comission)
 		if tradeAmountWithComission < info.AmountBaseAssetCoin {
 			return true, tradeAmount, nil

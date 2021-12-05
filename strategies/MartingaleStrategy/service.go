@@ -9,8 +9,8 @@ import (
 func (c *MartingaleStrategy) ShouldBuy(info bot.Info) (bool, float64, error) {
 	if !c.Init {
 		if checkIfHaveMoneyToBuy(0, c.AmountFirstTrade, info) {
-			purchase := c.AmountFirstTrade / info.LastPrice
-			bet := purchase * info.LastPrice
+			purchase := c.AmountFirstTrade / info.AvgPrice
+			bet := purchase * info.AvgPrice
 			avg := (bet * (1 + info.Comission) / purchase) + (bet * info.Comission)
 			c.Purchases = []float64{purchase}
 			c.Bets = []float64{bet}
@@ -26,11 +26,11 @@ func (c *MartingaleStrategy) ShouldBuy(info bot.Info) (bool, float64, error) {
 	} else {
 
 		if c.BuyMode {
-			if c.Averages[c.Iteration] >= info.LastPrice {
+			if c.Averages[c.Iteration] >= info.AvgPrice {
 				if checkIfHaveMoneyToBuy(c.Bets[c.Iteration], c.AmountFirstTrade, info) {
 
-					purchase := 2 * c.Bets[c.Iteration] / info.LastPrice
-					bet := purchase * info.LastPrice
+					purchase := 2 * c.Bets[c.Iteration] / info.AvgPrice
+					bet := purchase * info.AvgPrice
 
 					newAveragesNuemerador := float64(0)
 					newAveragesDenominador := float64(0)

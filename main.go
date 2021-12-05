@@ -7,8 +7,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/adshao/go-binance/v2"
 	"github.com/fedealliani/gobot/bot"
+	"github.com/fedealliani/gobot/exchanges/binance"
 	candlestrategy "github.com/fedealliani/gobot/strategies/CandleStrategy"
 	martingalestrategy "github.com/fedealliani/gobot/strategies/MartingaleStrategy"
 	percentagestrategy "github.com/fedealliani/gobot/strategies/PercentageStrategy"
@@ -76,13 +76,12 @@ func GetConfig() bot.Config {
 	return config
 }
 
-func GetBinanceClient() *binance.Client {
+func GetBinanceClient() *binance.BinanceClient {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-	// Create a telegram service. Ignoring error for demo simplicity.
 	apiKey := os.Getenv("BINANCE_API_KEY")
 	secretKey := os.Getenv("BINANCE_SECRET_KEY")
-	return binance.NewClient(apiKey, secretKey)
+	return binance.New(apiKey, secretKey)
 }

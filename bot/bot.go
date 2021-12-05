@@ -1,17 +1,15 @@
 package bot
 
-import "github.com/adshao/go-binance/v2"
-
 type GoBot struct {
-	strategy      Strategy
-	config        Config
-	binanceClient *binance.Client
+	strategy       Strategy
+	config         Config
+	exchangeClient Exchange
 }
 
-func New(strategy Strategy, config Config, binanceClient *binance.Client) *GoBot {
+func New(strategy Strategy, config Config, exchangeClient Exchange) *GoBot {
 	return &GoBot{
-		strategy:      strategy,
-		config:        config,
-		binanceClient: binanceClient,
+		strategy:       strategy,
+		config:         config,
+		exchangeClient: exchangeClient,
 	}
 }

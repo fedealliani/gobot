@@ -10,45 +10,10 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/adshao/go-binance/v2"
 	"github.com/joho/godotenv"
 	"github.com/nikoksr/notify"
 	"github.com/nikoksr/notify/service/telegram"
 )
-
-func getCandle(cl *binance.Kline) Candle {
-	open, err := strconv.ParseFloat(cl.Open, 64)
-	if err != nil {
-		fmt.Errorf("there was an error parsing candles", err)
-	}
-	high, err := strconv.ParseFloat(cl.High, 64)
-	if err != nil {
-		fmt.Errorf("there was an error parsing candles", err)
-	}
-	low, err := strconv.ParseFloat(cl.Low, 64)
-	if err != nil {
-		fmt.Errorf("there was an error parsing candles", err)
-	}
-	close, err := strconv.ParseFloat(cl.Close, 64)
-	if err != nil {
-		fmt.Errorf("there was an error parsing candles", err)
-	}
-	volume, err := strconv.ParseFloat(cl.Volume, 64)
-	if err != nil {
-		fmt.Errorf("there was an error parsing candles", err)
-	}
-
-	candle := Candle{
-		OpenTime:  float64(cl.OpenTime),
-		Open:      open,
-		High:      high,
-		Low:       low,
-		Close:     close,
-		Volume:    volume,
-		CloseTime: float64(cl.CloseTime),
-	}
-	return candle
-}
 
 func GetValueInUSD(symbol string, value float64) (float64, error) {
 	result := 0.0

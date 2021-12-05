@@ -6,7 +6,7 @@ type Info struct {
 	AmountQuoteAssetCoin float64
 	Candles              []Candle
 	Comission            float64
-	LastPrice            float64
+	AvgPrice             float64
 }
 type Candle struct {
 	OpenTime                  float64
