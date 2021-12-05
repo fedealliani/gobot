@@ -53,13 +53,13 @@ func GetConfig() bot.Config {
 	var err error
 	// Default config
 	config := bot.Config{
-		StrategyName:           "candleStrategy",
-		IntervalName:           "1h",
-		LoggerLvl:              2,
-		IntervalInSeconds:      3600,
-		Simulator:              true,
-		Symbol:                 "BTCUSDT",
-		AmountOtherCoinToTrade: 1000,
+		StrategyName:            "candleStrategy",
+		IntervalName:            "1h",
+		LoggerLvl:               2,
+		IntervalInSeconds:       3600,
+		Simulator:               true,
+		Symbol:                  "BTCUSDT",
+		AmountQuoteAssetToTrade: 1000,
 	}
 	jsonFile, err := os.Open("config.json")
 	if err != nil {

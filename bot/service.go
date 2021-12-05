@@ -18,7 +18,7 @@ func (bot *GoBot) RunBot() {
 	log.Infof("Configuration: %+v", config)
 	log.Infof("Strategy:%+v", strategy)
 
-	otherCoin := float64(config.AmountOtherCoinToTrade)
+	otherCoin := float64(config.AmountQuoteAssetToTrade)
 	dominantCoin := float64(0)
 	firstSymbol := config.Symbol[0:3]
 	secondSymbol := config.Symbol[3:]
@@ -58,7 +58,7 @@ func (bot *GoBot) RunBot() {
 				otherCoin = otherCoin - amount
 				notificationString := fmt.Sprintf("Buy %.8f %s", amount, secondSymbol)
 				log.Debug(notificationString)
-				profit := dominantCoin*lastPrice + otherCoin - config.AmountOtherCoinToTrade
+				profit := dominantCoin*lastPrice + otherCoin - config.AmountQuoteAssetToTrade
 				usdValueString := fmt.Sprintf("Having %.8f %s and %.8f %s . Profit %.8f %s", dominantCoin, firstSymbol, otherCoin, secondSymbol, profit, secondSymbol)
 				log.Debug(usdValueString)
 				//Notify(notificationString)
@@ -80,7 +80,7 @@ func (bot *GoBot) RunBot() {
 				otherCoin = otherCoin + totalMoneySell
 				notificationString := fmt.Sprintf("Sell %.8f %s", amount, firstSymbol)
 				log.Debug(notificationString)
-				profit := dominantCoin*lastPrice + otherCoin - config.AmountOtherCoinToTrade
+				profit := dominantCoin*lastPrice + otherCoin - config.AmountQuoteAssetToTrade
 				usdValueString := fmt.Sprintf("Having %.8f %s and %.8f %s . Profit %.8f %s", dominantCoin, firstSymbol, otherCoin, secondSymbol, profit, secondSymbol)
 				log.Debug(usdValueString)
 				//Notify(notificationString)

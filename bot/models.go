@@ -23,14 +23,14 @@ type Candle struct {
 	Ignore                    float64
 }
 type Config struct {
-	StrategyName           string
-	IntervalName           string
-	LoggerLvl              int64
-	IntervalInSeconds      int64
-	Simulator              bool
-	Symbol                 string
-	AmountOtherCoinToTrade float64
-	Variables              map[string]interface{}
+	StrategyName            string                 `json:"strategyName"`
+	IntervalName            string                 `json:"intervalName"`
+	LoggerLvl               int64                  `json:"loggerLvl"`
+	IntervalInSeconds       int64                  `json:"intervalInSeconds"`
+	Simulator               bool                   `json:"simulator"`
+	Symbol                  string                 `json:"symbol"`
+	AmountQuoteAssetToTrade float64                `json:"amountQuoteAssetToTrade"`
+	Variables               map[string]interface{} `json:"variables"`
 }
 type UsdValue struct {
 	LPrice string

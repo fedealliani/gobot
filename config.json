@@ -5,7 +5,7 @@
     "intervalInSeconds":60,
     "simulator":true,
     "symbol":"BTCUSDT",
-    "amountOtherCoinToTrade":10000,
+    "amountQuoteAssetToTrade":10000,
 	"variables":{
        "amountFirstTrade":1
     }
