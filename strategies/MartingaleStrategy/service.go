@@ -72,7 +72,7 @@ func (c *MartingaleStrategy) ShouldSell(info bot.Info) (bool, float64, error) {
 	if !c.BuyMode && c.Init {
 		c.BuyMode = true
 		c.Init = false
-		return true, info.AmountDominantCoin, nil
+		return true, info.AmountBaseAssetCoin, nil
 	}
 
 	return false, 0, nil

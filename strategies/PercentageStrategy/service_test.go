@@ -26,7 +26,7 @@ var percentageStrategyAfterFirstBuy = PercentageStrategy{
 }
 
 func TestShouldBuy01WhenInitDontBuy(t *testing.T) {
-	info := bot.Info{AmountOtherCoin: 10000, LastPrice: 500}
+	info := bot.Info{AmountQuoteAssetCoin: 10000, LastPrice: 500}
 	res, amount, err := percentageStrategyDefault.ShouldBuy(info)
 	if !assert.Equal(t, nil, err) {
 		t.Fatalf("There was an error on ShouldBuy %v", err)
@@ -41,7 +41,7 @@ func TestShouldBuy01WhenInitDontBuy(t *testing.T) {
 
 func TestShouldBuy02DontBuyBecauseDontMeetExpectedPercentage(t *testing.T) {
 	lastPrice := percentageStrategyAfterInit.Target
-	info := bot.Info{AmountOtherCoin: 10000, LastPrice: lastPrice}
+	info := bot.Info{AmountQuoteAssetCoin: 10000, LastPrice: lastPrice}
 	res, amount, err := percentageStrategyAfterInit.ShouldBuy(info)
 	if !assert.Equal(t, nil, err) {
 		t.Fatalf("There was an error on ShouldBuy %v", err)
@@ -56,7 +56,7 @@ func TestShouldBuy02DontBuyBecauseDontMeetExpectedPercentage(t *testing.T) {
 
 func TestShouldBuy03BuyBecauseMeetExpectedPercentage(t *testing.T) {
 	lastPrice := percentageStrategyAfterInit.Target - 1
-	info := bot.Info{AmountOtherCoin: 10000, LastPrice: lastPrice}
+	info := bot.Info{AmountQuoteAssetCoin: 10000, LastPrice: lastPrice}
 	res, amount, err := percentageStrategyAfterInit.ShouldBuy(info)
 	if !assert.Equal(t, nil, err) {
 		t.Fatalf("There was an error on ShouldBuy %v", err)
@@ -64,13 +64,13 @@ func TestShouldBuy03BuyBecauseMeetExpectedPercentage(t *testing.T) {
 	if !assert.Equal(t, true, res) {
 		t.Fatalf("There was an error on ShouldBuy %v", err)
 	}
-	if !assert.Equal(t, float64(info.AmountOtherCoin), amount) {
+	if !assert.Equal(t, float64(info.AmountQuoteAssetCoin), amount) {
 		t.Fatalf("There was an error on ShouldBuy %v", err)
 	}
 }
 
 func TestShouldSell01WhenInitDontSell(t *testing.T) {
-	info := bot.Info{AmountOtherCoin: 10000, LastPrice: 500}
+	info := bot.Info{AmountQuoteAssetCoin: 10000, LastPrice: 500}
 	res, amount, err := percentageStrategyDefault.ShouldSell(info)
 	if !assert.Equal(t, nil, err) {
 		t.Fatalf("There was an error on ShouldSell %v", err)
@@ -85,7 +85,7 @@ func TestShouldSell01WhenInitDontSell(t *testing.T) {
 
 func TestShouldSell02DontSellBecauseDontMeetExpectedPercentage(t *testing.T) {
 	lastPrice := percentageStrategyAfterFirstBuy.Target
-	info := bot.Info{AmountOtherCoin: 10000, LastPrice: lastPrice}
+	info := bot.Info{AmountQuoteAssetCoin: 10000, LastPrice: lastPrice}
 	res, amount, err := percentageStrategyAfterFirstBuy.ShouldSell(info)
 	if !assert.Equal(t, nil, err) {
 		t.Fatalf("There was an error on ShouldSell %v", err)
@@ -100,7 +100,7 @@ func TestShouldSell02DontSellBecauseDontMeetExpectedPercentage(t *testing.T) {
 
 func TestShouldSell03SellBecauseDontMeetExpectedPercentage(t *testing.T) {
 	lastPrice := percentageStrategyAfterFirstBuy.Target + 1
-	info := bot.Info{AmountOtherCoin: 10000, LastPrice: lastPrice}
+	info := bot.Info{AmountQuoteAssetCoin: 10000, LastPrice: lastPrice}
 	res, amount, err := percentageStrategyAfterFirstBuy.ShouldSell(info)
 	if !assert.Equal(t, nil, err) {
 		t.Fatalf("There was an error on ShouldSell %v", err)
@@ -108,7 +108,7 @@ func TestShouldSell03SellBecauseDontMeetExpectedPercentage(t *testing.T) {
 	if !assert.Equal(t, true, res) {
 		t.Fatalf("There was an error on ShouldSell %v", err)
 	}
-	if !assert.Equal(t, float64(info.AmountDominantCoin), amount) {
+	if !assert.Equal(t, float64(info.AmountBaseAssetCoin), amount) {
 		t.Fatalf("There was an error on ShouldSell %v", err)
 	}
 }

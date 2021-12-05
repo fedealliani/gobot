@@ -7,7 +7,7 @@ func calculateNewBet(lastBet float64, info bot.Info) float64 {
 }
 func checkIfHaveMoneyToBuy(lastBet float64, firstTrade float64, info bot.Info) bool {
 	if lastBet == 0 {
-		return firstTrade*(1+info.Comission) < info.AmountOtherCoin
+		return firstTrade*(1+info.Comission) < info.AmountQuoteAssetCoin
 	}
-	return calculateNewBet(lastBet, info) < info.AmountOtherCoin
+	return calculateNewBet(lastBet, info) < info.AmountQuoteAssetCoin
 }

@@ -18,11 +18,11 @@ func (bot *GoBot) RunBot() {
 	log.Infof("Configuration: %+v", config)
 	log.Infof("Strategy:%+v", strategy)
 
-	otherCoin := float64(config.AmountQuoteAssetToTrade)
+	amountQuoteAsset := float64(config.AmountQuoteAssetToTrade)
 	dominantCoin := float64(0)
 	firstSymbol := config.Symbol[0:3]
 	secondSymbol := config.Symbol[3:]
-	log.Infof("Start with %.2f %s\n", otherCoin, secondSymbol)
+	log.Infof("Start with %.2f %s\n", amountQuoteAsset, secondSymbol)
 
 	for {
 		candlesBinance, err := binanceClient.NewKlinesService().Symbol(config.Symbol).
@@ -38,11 +38,11 @@ func (bot *GoBot) RunBot() {
 		}
 		lastPrice := candles[len(candles)-1].Close
 		info := Info{
-			AmountDominantCoin: dominantCoin,
-			AmountOtherCoin:    otherCoin,
-			Candles:            candles,
-			Comission:          0.1 / 100,
-			LastPrice:          lastPrice,
+			AmountBaseAssetCoin:  dominantCoin,
+			AmountQuoteAssetCoin: amountQuoteAsset,
+			Candles:              candles,
+			Comission:            0.1 / 100,
+			LastPrice:            lastPrice,
 		}
 		should, amount, err := strategy.ShouldBuy(info)
 		if err != nil {
@@ -55,11 +55,11 @@ func (bot *GoBot) RunBot() {
 				comision := amount * info.Comission
 				totalBuyAmount := amount - comision
 				dominantCoin = dominantCoin + totalBuyAmount/lastPrice
-				otherCoin = otherCoin - amount
+				amountQuoteAsset = amountQuoteAsset - amount
 				notificationString := fmt.Sprintf("Buy %.8f %s", amount, secondSymbol)
 				log.Debug(notificationString)
-				profit := dominantCoin*lastPrice + otherCoin - config.AmountQuoteAssetToTrade
-				usdValueString := fmt.Sprintf("Having %.8f %s and %.8f %s . Profit %.8f %s", dominantCoin, firstSymbol, otherCoin, secondSymbol, profit, secondSymbol)
+				profit := dominantCoin*lastPrice + amountQuoteAsset - config.AmountQuoteAssetToTrade
+				usdValueString := fmt.Sprintf("Having %.8f %s and %.8f %s . Profit %.8f %s", dominantCoin, firstSymbol, amountQuoteAsset, secondSymbol, profit, secondSymbol)
 				log.Debug(usdValueString)
 				//Notify(notificationString)
 			} else {
@@ -77,11 +77,11 @@ func (bot *GoBot) RunBot() {
 				comision := amount * lastPrice * info.Comission
 				totalMoneySell := amount*lastPrice - comision
 				dominantCoin = dominantCoin - amount
-				otherCoin = otherCoin + totalMoneySell
+				amountQuoteAsset = amountQuoteAsset + totalMoneySell
 				notificationString := fmt.Sprintf("Sell %.8f %s", amount, firstSymbol)
 				log.Debug(notificationString)
-				profit := dominantCoin*lastPrice + otherCoin - config.AmountQuoteAssetToTrade
-				usdValueString := fmt.Sprintf("Having %.8f %s and %.8f %s . Profit %.8f %s", dominantCoin, firstSymbol, otherCoin, secondSymbol, profit, secondSymbol)
+				profit := dominantCoin*lastPrice + amountQuoteAsset - config.AmountQuoteAssetToTrade
+				usdValueString := fmt.Sprintf("Having %.8f %s and %.8f %s . Profit %.8f %s", dominantCoin, firstSymbol, amountQuoteAsset, secondSymbol, profit, secondSymbol)
 				log.Debug(usdValueString)
 				//Notify(notificationString)
 			} else {

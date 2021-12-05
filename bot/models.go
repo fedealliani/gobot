@@ -2,11 +2,11 @@ package bot
 
 type Response [][]interface{}
 type Info struct {
-	AmountDominantCoin float64
-	AmountOtherCoin    float64
-	Candles            []Candle
-	Comission          float64
-	LastPrice          float64
+	AmountBaseAssetCoin  float64
+	AmountQuoteAssetCoin float64
+	Candles              []Candle
+	Comission            float64
+	LastPrice            float64
 }
 type Candle struct {
 	OpenTime                  float64

@@ -20,9 +20,9 @@ func (c *PercentageStrategy) ShouldBuy(info bot.Info) (bool, float64, error) {
 		if info.LastPrice < c.Target {
 			// Calculate new target.
 			// The sell target is the result of the current price + the configured percentage + two comissions (buy and sell comission)
-			c.Target = info.LastPrice*(1+c.Percentage/100) + 2*info.AmountOtherCoin*info.Comission
+			c.Target = info.LastPrice*(1+c.Percentage/100) + 2*info.AmountQuoteAssetCoin*info.Comission
 			c.BuyMode = false
-			amountToBuy := info.AmountOtherCoin
+			amountToBuy := info.AmountQuoteAssetCoin
 			return true, amountToBuy, nil
 		}
 	}
@@ -37,7 +37,7 @@ func (c *PercentageStrategy) ShouldSell(info bot.Info) (bool, float64, error) {
 		if info.LastPrice > c.Target {
 			c.BuyMode = true
 			c.Target = info.LastPrice * (1 - c.Percentage/100)
-			amountSell := info.AmountDominantCoin
+			amountSell := info.AmountBaseAssetCoin
 			return true, amountSell, nil
 		}
 
