@@ -19,8 +19,10 @@ func (bot *GoBot) RunBot() {
 
 	amountQuoteAsset := float64(config.AmountQuoteAssetToTrade)
 	dominantCoin := float64(0)
-	firstSymbol := config.Symbol[0:3]
-	secondSymbol := config.Symbol[3:]
+	firstSymbol, secondSymbol, err := exchangeClient.GetSymbols(config.Symbol)
+	if err != nil {
+		panic(err)
+	}
 	log.Infof("Start with %.2f %s\n", amountQuoteAsset, secondSymbol)
 
 	for {

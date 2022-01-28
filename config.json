@@ -1,12 +1,12 @@
 {
-    "strategyName":"martingaleStrategy",
+    "strategyName":"percentageStrategy",
     "intervalName":"1m",
     "loggerLvl":5,
     "intervalInSeconds":60,
     "simulator":true,
-    "symbol":"BTCUSDT",
+    "symbol":"USDTDAI",
     "amountQuoteAssetToTrade":10000,
 	"variables":{
-       "amountFirstTrade":1
+       "percentage":0.15
     }
 }

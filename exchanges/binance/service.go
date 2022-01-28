@@ -3,6 +3,7 @@ package binance
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -43,13 +44,14 @@ func (b *BinanceClient) GetCandles(symbol string, interval string) ([]bot.Candle
 }
 func (b *BinanceClient) ExchangeInfo(symbol string) (ExchangeInfo, error) {
 	response := ExchangeInfo{}
-	queryString := "?" + symbol
-	resp, err := http.Get(BASE_URL + EXCHANGE_INFO_URL + queryString)
+	queryString := "?symbol=" + symbol
+	url := BASE_URL + EXCHANGE_INFO_URL + queryString
+	resp, err := http.Get(url)
 	if err != nil {
 		return response, err
 	}
 	if resp.StatusCode != http.StatusOK {
-		return response, errors.New("invalid status code")
+		return response, errors.New(fmt.Sprintf("invalid status code %d", resp.StatusCode))
 	}
 	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
