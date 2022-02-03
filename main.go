@@ -77,11 +77,14 @@ func GetConfig() bot.Config {
 }
 
 func GetBinanceClient() *binance.BinanceClient {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
 	apiKey := os.Getenv("BINANCE_API_KEY")
 	secretKey := os.Getenv("BINANCE_SECRET_KEY")
+	if apiKey == "" || secretKey == "" {
+		err := godotenv.Load()
+		if err != nil {
+			log.Fatal("Error loading .env file")
+		}
+	}
+
 	return binance.New(apiKey, secretKey)
 }
