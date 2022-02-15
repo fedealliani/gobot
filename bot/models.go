@@ -1,5 +1,7 @@
 package bot
 
+import "time"
+
 type Response [][]interface{}
 type Info struct {
 	AmountBaseAssetCoin  float64
@@ -34,4 +36,12 @@ type Config struct {
 }
 type UsdValue struct {
 	LPrice string
+}
+
+type Order struct {
+	ID               int64
+	AmountBaseAsset  float64
+	AmountQuoteAsset float64
+	Price            float64
+	Time             time.Time
 }
